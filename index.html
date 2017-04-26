@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />
+	<title>移动app框架</title>
+	<link rel="stylesheet" href="css/mobileApp.css" />
+	<!--link rel="stylesheet" href="css/SG.workbench.css" /-->
+</head>
+<body ontouchstart="">
+	<div id="homePage" class="page" style="background-color:red;">
+	    <ul>
+	        <li><a href="#page1">页面1-#&amp;page1</a></li>
+	        <li><a href="#page2">页面2-#page2</a></li>
+	        <li><a href="#page3">页面3</a></li>
+	    </ul>
+	</div>
+	<div id="page1" class="page hide" style="background-color:green;" data-title="页面1"><a href="#homePage">&laquo;返回首页1</a></div>
+	<div id="page2" class="page hide" style="background-color:teal;"><a href="#homePage">&laquo;返回首页2</a></div>
+	<div id="page3" class="page hide" style="background-color:orange;"><a href="#homePage">&laquo;返回首页3</a></div>
+	
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="js/mobileApp.js"></script>
+	<!--script src="js/mobilebone.js"></script-->
+	<script>
+		new mobileApp().init();
+	</script>
+</body>
+</html>

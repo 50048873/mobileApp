@@ -1,0 +1,24 @@
+{
+  "name": "SG_puzzleActivity",
+  "authors": [
+    "50048873 <50048873@qq.com>"
+  ],
+  "description": "",
+  "main": "",
+  "keywords": [
+    "state",
+    "grid"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.9.1 - 3",
+    "weui": "^1.0.2"
+  }
+}
