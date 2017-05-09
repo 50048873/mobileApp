@@ -1,0 +1,130 @@
+/* 常用工具类 */
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: ' ';
+    display: table;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.block {
+	display: block!important;
+}
+.none { 
+	display: none;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ellipsis-2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.line-top:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    border-top: 1px solid @line-half;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+
+.line-right:before {
+    content: " ";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    border-right: 1px solid @line-half;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+}
+
+.line-bottom:after {
+    content: " ";
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    border-bottom: 1px solid @line-half;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+.arrow { 
+	content: " ";
+    display: inline-block;
+    height: 0.1rem;
+    width: 0.1rem;
+    border-width: 0;
+    border-color: #aaa;
+    border-style: solid;
+    -webkit-transform: rotate(45deg);
+    position: absolute;
+    top: 50%;
+    right: @d15;
+}
+.arrow-up { 
+	border-width: 2px 0 0 2px;
+	margin-top: -0.03rem;
+}
+.arrow-down { 
+	border-width: 0 2px 2px 0;
+	margin-top: -0.08rem;
+}
+.sj-t(@w:12px, @c: #43c5ef) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: transparent transparent @c transparent;
+	border-style: dashed dashed solid dashed;
+}
+.sj-r(@w:12px, @c: red) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: transparent transparent transparent @c;
+	border-style: dashed dashed dashed solid;
+}
+.sj-l(@w:12px, @c: red) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: transparent @c transparent transparent;
+	border-style: dashed solid dashed dashed;
+}
+.sj-b(@w:12px, @c: #43c5ef) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: @c transparent transparent transparent;
+	border-style: solid dashed dashed dashed;
+}

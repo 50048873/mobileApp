@@ -8,22 +8,104 @@
 	<!--link rel="stylesheet" href="css/SG.workbench.css" /-->
 </head>
 <body ontouchstart="">
-	<div id="homePage" class="page" style="background-color:red;">
-	    <ul>
-	        <li><a href="#page1">页面1-#&amp;page1</a></li>
-	        <li><a href="#page2">页面2-#page2</a></li>
-	        <li><a href="#page3">页面3</a></li>
-	    </ul>
+	<div id="page0" class="page" style="display:block;background-color:#111;" data-title="首页">
+		<div class="content">
+			<div class="p0-header">
+				<input type="text" placeholder="搜索" />
+			</div>
+		    <div class="lists">
+		    	<a href="template/moban1.html" data-title="二手物品" id="test">二手物品</a>
+		    	<a href="template/moban1.html" data-title="租房">租房</a>
+		    	<a href="template/moban1.html" data-title="二手房">二手房</a>
+		    	<a href="template/moban1.html" data-title="全职招聘">全职招聘</a>
+		    </div>
+			<p style="padding-top:600px;">这些内容是为了产生滚动</p>
+		</div>
 	</div>
-	<div id="page1" class="page hide" style="background-color:green;" data-title="页面1"><a href="#homePage">&laquo;返回首页1</a></div>
-	<div id="page2" class="page hide" style="background-color:teal;"><a href="#homePage">&laquo;返回首页2</a></div>
-	<div id="page3" class="page hide" style="background-color:orange;"><a href="#homePage">&laquo;返回首页3</a></div>
+	
+	<div id="page1" class="page" style="background-color:#222;">
+		<!--div class="header">
+			<a class="h-left" href="javascript:;" data-rel="back">&nbsp;</a>
+			<h1>发现</h1>
+			<a class="h-right hidden" href="publish.html">&nbsp;</a>
+		</div>
+		<div class="lists">
+			<a href="#p1" data-title="攻略">攻略</a>
+			<a href="javascript:;" data-title="问答">问答</a>
+			<a href="javascript:;" data-title="答题王">答题王</a>
+			<a href="javascript:;" data-title="办证">办证</a>
+		</div-->
+	</div>
+
+	<div id="page2" class="page" style="background-color:#333;">
+		<div class="header">
+			<a class="h-left hidden" href="javascript:;" data-rel="back">&laquo;返回</a>
+			<h1>选择发布类别</h1>
+			<a class="h-right" href="publish.html">我的发布</a>
+		</div>
+		<div class="lists">
+	    	<a href="template/p0/erwp.html" data-title="二手物品">二手物品</a>
+	    	<a href="fc.html" data-title="房产">房产</a>
+	    	<a href="erwp.html" data-title="洗车/自行车">洗车/自行车</a>
+	    	<a href="erwp.html" data-title="宠物">宠物</a>
+	    </div>
+		<p style="padding-top:600px;">这些内容是为了产生滚动</p>
+	</div>
+
+	<div id="page3" class="page" style="background-color:#444;">
+		<div class="header">
+			<a class="h-left hidden" href="javascript:;" data-rel="back">&laquo;返回</a>
+			<h1>消息</h1>
+			<a class="h-right" href="publish.html">忽略未读</a>
+		</div>
+		<div class="messages">
+	    	<a href="template/p0/erwp.html" data-title="二手物品">系统消息</a>
+	    	<a href="fc.html" data-title="房产">58同城</a>
+	    	<a href="erwp.html" data-title="洗车/自行车">答题王精选</a>
+	    	<a href="erwp.html" data-title="宠物">头条天天看</a>
+	    	<a href="erwp.html" data-title="宠物">今日推荐</a>
+	    </div>
+	</div>
+
+	<div id="page4" class="page" style="background-color:#555;">
+		<div class="lists">
+	    	<a href="template/p0/erwp.html" data-title="我的发布">我的发布</a>
+	    	<a href="fc.html" data-title="我的收藏">我的收藏</a>
+	    	<a href="erwp.html" data-title="历史记录">历史记录</a>
+	    	<a href="erwp.html" data-title="我的订阅">我的订阅</a>
+	    </div>
+	    <div class="lists">
+	    	<a href="template/p0/erwp.html" data-title="我的发布">求职</a>
+	    	<a href="fc.html" data-title="我的收藏">我的转转</a>
+	    	<a href="erwp.html" data-title="历史记录">我的预约</a>
+	    	<a href="erwp.html" data-title="我的订阅">金币商场</a>
+	    </div>
+	    <div class="lists">
+	    	<a href="template/p0/erwp.html" data-title="我的发布">任务中心</a>
+	    	<a href="fc.html" data-title="我的收藏">我的理财</a>
+	    	<a href="erwp.html" data-title="历史记录">我的贷款</a>
+	    	<a href="erwp.html" data-title="我的订阅">我的红包</a>
+	    </div>
+	</div>
+
+	<div class="footer">
+	    <a href="#page0" class="active">首页</a>
+	    <a href="#page1" data-title="发现">发现</a>
+	    <a href="#page2" data-title="发布">发布</a>
+	    <a href="#page3" data-title="消息">消息</a>
+	    <a href="#page4" data-title="个人中心">个人中心</a>
+	</div>
+
+	<div class="loading zIndex-3 none"></div>
 	
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="js/mobileApp.js"></script>
 	<!--script src="js/mobilebone.js"></script-->
 	<script>
-		new mobileApp().init();
+		new mobileApp({ 
+			animationTypes: 'slide'
+		});
 	</script>
+	<script src="js/index.js"></script>
 </body>
 </html>
