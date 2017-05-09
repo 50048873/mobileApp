@@ -9,7 +9,6 @@
 		animationTypes: 'slide', //其它值：fade
 		animatedTime: 225,		//默认值
 		errorPage: 'template/error.html',
-		errorTip: '<div class="noNet zIndex-3"><img src="img/error.png" alt="" /></div>',
 		pageClass: '.page' 
 	};
 
@@ -91,12 +90,6 @@
 	};
 
 	mobileApp.extend({ 
-		//模拟后台延时
-		simulateDelay: function(fn, time) { 
-			var time = time || Math.random() * 2000;
-			setTimeout(fn, time);
-		},
-
 		//判断用户点击是否过快
 		prev: null,
 		next: null,
@@ -176,10 +169,11 @@
 
 	//设置模版页面的头部内容
 	mobileApp.prototype.setPageHeader = function(aEle, nextPage) { 
-		var title = $(aEle).data('right');
+		var title = $(aEle).data('title') || '标题';
+		var right = $(aEle).data('right');
+		console.log(right)
 		$(nextPage).find('h1').text(title);
-		$('.h-right').text(title);
-		return title;
+		$(nextPage).find('.h-right').text(right);
 	};
 
 	//注册页面中所有的a链接点击后的行为
@@ -228,13 +222,17 @@
 
 			//如果是加载外部文件
 			else if (hrefLink.test(href))  { 
-				M.loadFile(href)
-					.done(function(data, textStatus, jqXHR) { 
-						M.handleAjaxPage(data, aEle, href);
-					})
-					.fail(function(data, textStatus, jqXHR) { 
-						M.loadErrorPage(data, aEle, M.errorPage);
-					});
+				if (M.$body.data(href)) { 
+					console.log('cache');
+				} else { 
+					M.loadFile(href)
+						.done(function(data, textStatus, jqXHR) { 
+							M.handleAjaxPage(data, aEle, href);
+						})
+						.fail(function(data, textStatus, jqXHR) { 
+							M.loadErrorPage(data, aEle, M.errorPage);
+						});
+				}
 			} 
 
 			//如果是返回
@@ -258,7 +256,7 @@
 		var M = this;
 		M.loadFile(href)
 			.done(function(data, textStatus, jqXHR) { 
-				mobileApp.simulateDelay(M.handleAjaxPage(data, aEle, href));
+				M.handleAjaxPage(data, aEle, href);
 			})
 			.fail(function(data, textStatus, jqXHR) { 
 				$.error('请检查' + M.errorPage + '的路径是否正确');
@@ -286,6 +284,7 @@
 		var $prevPage = M.getPrevPage(aEle);
 		var $nextPage = $(data).appendTo(M.$body).attr('id', M.getUseablePageId());
 		var title = M.setPageTitle(aEle, $nextPage);
+		M.setPageHeader(aEle, $nextPage);
 
 		M.goNextPage($prevPage, $nextPage);
 		M.clearAnimateClass($prevPage, $nextPage);
@@ -297,20 +296,13 @@
 		if (!dataHref) return;
 		M.loadFile(dataHref)
 			.done(function(data, textStatus, jqXHR) { 
-				mobileApp.simulateDelay(function() { 
-					console.log(data);
-				}, 1000);
+				console.log(data);
 			})
 			.fail(function(data, textStatus, jqXHR) { 
-				mobileApp.simulateDelay(function() { 
-					$contrainer.append(M.errorTip);
-					$.error('请检查' + dataHref + '的路径是否正确');
-				}, 1000);
+				$.error('请检查' + dataHref + '的路径是否正确');
 			})
 			.always(function() { 
-				mobileApp.simulateDelay(function() { 
-					$('.loading').hide();
-				}, 1000);
+				$('.loading').hide();
 			});*/
 	};
 
