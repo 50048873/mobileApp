@@ -15,7 +15,7 @@
 			</div>
 		    <div class="lists">
 		    	<a href="template/moban1.html" data-title="二手物品" data-right="发布信息">二手物品</a>
-		    	<a href="template/moban1.html" data-title="租房" data-right="发布信息">租房</a>
+		    	<a href="template/moban2.html" data-title="租房" data-right="发布信息">租房</a>
 		    	<a href="template/moban1.html" data-title="二手房" data-right="发布信息">二手房</a>
 		    	<a href="template/moban1.html" data-title="全职招聘" data-right="快速招人">全职招聘</a>
 		    </div>
@@ -38,7 +38,7 @@
 		</div-->
 	</div>
 
-	<div id="page2" class="page" style="background-color:#333;">
+	<div id="page2" class="page">
 		<div class="header">
 			<a class="h-left hidden" href="javascript:;" data-rel="back">&laquo;返回</a>
 			<h1>选择发布类别</h1>
@@ -53,14 +53,14 @@
 		<p style="padding-top:600px;">这些内容是为了产生滚动</p>
 	</div>
 
-	<div id="page3" class="page" style="background-color:#444;">
+	<div id="page3" class="page">
 		<div class="header">
 			<a class="h-left hidden" href="javascript:;" data-rel="back">&laquo;返回</a>
 			<h1>消息</h1>
 			<a class="h-right" href="publish.html">忽略未读</a>
 		</div>
 		<div class="messages">
-	    	<a href="template/p0/erwp.html" data-title="二手物品">系统消息</a>
+	    	<a href="template/moban2.html" data-title="系统消息">系统消息</a>
 	    	<a href="fc.html" data-title="房产">58同城</a>
 	    	<a href="erwp.html" data-title="洗车/自行车">答题王精选</a>
 	    	<a href="erwp.html" data-title="宠物">头条天天看</a>
@@ -68,7 +68,7 @@
 	    </div>
 	</div>
 
-	<div id="page4" class="page" style="background-color:#555;">
+	<div id="page4" class="page">
 		<div class="lists">
 	    	<a href="template/p0/erwp.html" data-title="我的发布">我的发布</a>
 	    	<a href="fc.html" data-title="我的收藏">我的收藏</a>
@@ -89,7 +89,7 @@
 	    </div>
 	</div>
 
-	<div class="footer">
+	<div class="footer" id="footer">
 	    <a href="#page0" class="active">首页</a>
 	    <a href="#page1" data-title="发现">发现</a>
 	    <a href="#page2" data-title="发布">发布</a>
@@ -103,8 +103,8 @@
 	<script src="js/mobileApp.js"></script>
 	<!--script src="js/mobilebone.js"></script-->
 	<script>
-		new mobileApp({ 
-			animationTypes: 'fade'
+		var maInstance = new ma({ 
+			animationTypes: 'slide'
 		});
 	</script>
 	<script src="js/index.js"></script>

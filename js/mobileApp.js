@@ -9,11 +9,14 @@
 		animationTypes: 'slide', //其它值：fade
 		animatedTime: 225,		//默认值
 		errorPage: 'template/error.html',
-		pageClass: '.page' 
+		pageClass: '.page',
+		rootFooterId: '#footer'
 	};
 
-	var anchorLink = /^#[a-z|A-Z|0-9|_|-]+/;
+	var anchorLink = /^#[a-z|A-Z|0-9|_|-]*/;
 	var hrefLink = /^[a-z|A-Z|0-9|_|-|\/]+\.ht[m|ml]/;
+	var baseUrl = location.href;
+	var $body = $('body');
 
 	//构建类
 	var mobileApp = function (options) { 
@@ -111,20 +114,58 @@
 				var diff = Math.abs(next - prev);
 				return diff < minTime;
 			}
+		},
+		//异步加载文件
+		loadFile: function(href) { 
+			return $.ajax({ 
+				url: baseUrl + href,
+				beforeSend: function() { 
+					$('.loading').show();
+				},
+				complete: function(XMLHttpRequest, textStatus) { 
+					$('.loading').hide();
+				}
+			});
+		},
+		//网络连接失败提示
+		noNetTip: function(targetEle) { 
+			var html = '<div class="noNet zIndex-3">' +
+							'<img id="refresh" src="img/error.png" alt="" />' +
+							'<p>网络连接失败，点击刷新</p>' +
+						'</div>';
+			var $targetEle = $(targetEle);
+			if ($targetEle.children('.noNet').length === 0) { 
+				$(html).appendTo($targetEle);
+			}
+		},
+
+		//缓存模版页面
+		templateCache: function(arr) { 
+			if ($.isArray(arr)) { 
+				for (var i = 0, len = arr.length; i < len; i++) { 
+					var path = arr[i];
+					ma.loadFile(path)
+						.done(function(data, textStatus, jqXHR) { 
+							$body.data(path, data);
+						})
+						.fail(function(XMLHttpRequest, textStatus, errorThrown) { 
+							$.error(errorThrown + '. 请检查' + path + '的路径是否正确');
+						});
+				}
+			} else { 
+				$.error('你需要传入一个带文件路径的数组');
+			}
 		}
 	});
 
 	//初始化应用
 	mobileApp.prototype.init = function(options) { 
-		this.baseUrl = location.href;
 		this.prevIndex = 0;
 		this.lookedPages = [];
-		this.$body = $('body');
 		$.extend(this, defaults, options);
 		
 		this.registerALink();
 	};
-
 
 	//动画前进
 	mobileApp.prototype.goNextPage = function(prevPage, nextPage) { 
@@ -171,16 +212,47 @@
 	mobileApp.prototype.setPageHeader = function(aEle, nextPage) { 
 		var title = $(aEle).data('title') || '标题';
 		var right = $(aEle).data('right');
-		console.log(right)
 		$(nextPage).find('h1').text(title);
 		$(nextPage).find('.h-right').text(right);
+	};
+
+	//锚连接切换
+	mobileApp.prototype.togglePage = function(aEle) { 
+		var M = this;
+		//切换页脚选中状态
+		$(aEle).addClass('active').siblings().removeClass('active');
+
+		//动画切换页面
+		var nextIndex = $(aEle).index();
+		var $pages = $(M.pageClass),
+			$prevPage = $pages.eq(M.prevIndex),
+			$nextPage = $pages.eq(nextIndex);
+		
+		M.setPageTitle(aEle, $nextPage);
+
+		//点击相同
+		if (nextIndex === M.prevIndex) return;
+
+		if (M.animationTypes === 'slide') { //slide动画
+			if (nextIndex > M.prevIndex) { //前进
+				M.goNextPage($prevPage, $nextPage);
+			} else { //后退
+				M.goPrevPage($prevPage, $nextPage);
+			}
+			M.clearAnimateClass($prevPage, $nextPage);
+			
+		} else if (M.animationTypes === 'fade') { //fade动画
+			$prevPage.hide();
+			$nextPage.fadeIn(M.animatedTime);
+		}
+		M.prevIndex = nextIndex;
 	};
 
 	//注册页面中所有的a链接点击后的行为
 	mobileApp.prototype.registerALink = function() { 
 		var M = this;
-		var animationTypes = M.animationTypes;
-		M.$body.on('click', 'a', function(e) { 
+		//var animationTypes = M.animationTypes;
+		$body.on('click', 'a', function(e) { 
 			e.preventDefault();
 			//点击过快禁用
 			if (mobileApp.tapIsTooFast(M.animatedTime)) return;
@@ -190,42 +262,17 @@
 			var aEle = this;
 
 			//如果是有效锚链接
-			if (anchorLink.test(href) && $(href).length) { 
+			if (anchorLink.test(href) && ($(aEle).parent().parent()[0].tagName === 'BODY')) { 
 				//切换页脚选中状态
-				$(this).addClass('active').siblings().removeClass('active');
-
-				//动画切换页面
-				var nextIndex = $(this).index();
-				var $pages = $(M.pageClass),
-					$prevPage = $pages.eq(M.prevIndex),
-					$nextPage = $pages.eq(nextIndex);
-				
-				M.setPageTitle(aEle, $nextPage);
-
-				//点击相同
-				if (nextIndex === M.prevIndex) return;
-
-				if (animationTypes === 'slide') { //slide动画
-					if (nextIndex > M.prevIndex) { //前进
-						M.goNextPage($prevPage, $nextPage);
-					} else { //后退
-						M.goPrevPage($prevPage, $nextPage);
-					}
-					M.clearAnimateClass($prevPage, $nextPage);
-					
-				} else if (animationTypes === 'fade') { //fade动画
-					$prevPage.hide();
-					$nextPage.fadeIn(M.animatedTime);
-				}
-				M.prevIndex = nextIndex;
+				M.togglePage(aEle);
 			} 
 
 			//如果是加载外部文件
 			else if (hrefLink.test(href))  { 
-				if (M.$body.data(href)) { 
-					console.log('cache');
+				if ($body.data(href)) { //如果已经缓存了
+					M.handleAjaxPage($body.data(href), aEle, href);
 				} else { 
-					M.loadFile(href)
+					mobileApp.loadFile(href)
 						.done(function(data, textStatus, jqXHR) { 
 							M.handleAjaxPage(data, aEle, href);
 						})
@@ -247,42 +294,26 @@
 				M.clearAnimateClass($prevPage, $nextPage);
 				M.removeUnuseableEle($prevPage);
 			} 
-		
 		});
 	};
 
 	//异步加载错误提示页面
 	mobileApp.prototype.loadErrorPage = function(data, aEle, href) { 
 		var M = this;
-		M.loadFile(href)
+		mobileApp.loadFile(href)
 			.done(function(data, textStatus, jqXHR) { 
 				M.handleAjaxPage(data, aEle, href);
 			})
 			.fail(function(data, textStatus, jqXHR) { 
 				$.error('请检查' + M.errorPage + '的路径是否正确');
-			})
-			.always(function() { 
-				$('.loading').hide();
 			});
-	};
-
-	//异步加载文件
-	mobileApp.prototype.loadFile = function(href) { 
-		var M = this;
-		return $.ajax({ 
-			url: M.baseUrl + href,
-			beforeSend: function() { 
-				$('.loading').show();
-			}
-		});
 	};
 
 	//异步加载页面的处理
 	mobileApp.prototype.handleAjaxPage = function(data, aEle, href) { 
-		$('.loading').hide();
 		var M = this;
 		var $prevPage = M.getPrevPage(aEle);
-		var $nextPage = $(data).appendTo(M.$body).attr('id', M.getUseablePageId());
+		var $nextPage = $(data).appendTo($body).attr('id', M.getUseablePageId());
 		var title = M.setPageTitle(aEle, $nextPage);
 		M.setPageHeader(aEle, $nextPage);
 
@@ -290,20 +321,6 @@
 		M.clearAnimateClass($prevPage, $nextPage);
 		M.pushState(title, M.getFilename(href), null);
 		M.lookedPages.push($prevPage);
-		
-		/*var $contrainer = $('[data-href]');
-		var dataHref = $contrainer.attr('data-href');
-		if (!dataHref) return;
-		M.loadFile(dataHref)
-			.done(function(data, textStatus, jqXHR) { 
-				console.log(data);
-			})
-			.fail(function(data, textStatus, jqXHR) { 
-				$.error('请检查' + dataHref + '的路径是否正确');
-			})
-			.always(function() { 
-				$('.loading').hide();
-			});*/
 	};
 
 	//获取a链接中的文件名
@@ -339,5 +356,5 @@
 		return this.addId = 'page' + (Math.max.apply(null, ids) + 1);
 	};
 
-	return window.mobileApp = mobileApp;
+	return window.ma = window.mobileApp = mobileApp;
 })(window, jQuery);
