@@ -98,12 +98,26 @@
 	</div>
 
 	<div class="loading zIndex-3 none"></div>
+
+	<div class="maskDialog none">
+        <div class="mask"></div>
+        <div class="dialog">
+        	<div class="dialog-body">
+	            <h3>提示</h3>
+	            <p>检测到当前无网络，请设置网络连接</p>
+        	</div>
+        	<div class="dialog-footer">
+        		<button id="cancel">取消</button>
+        		<button id="setup">立即设置</button>
+        	</div>
+        </div>
+    </div>
 	
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="js/mobileApp.js"></script>
 	<!--script src="js/mobilebone.js"></script-->
 	<script>
-		var maInstance = new ma({ 
+		new ma({ 
 			animationTypes: 'slide'
 		});
 	</script>

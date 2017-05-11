@@ -115,6 +115,27 @@
 				return diff < minTime;
 			}
 		},
+		//检测网络
+		isOnLine: function() { 
+			return window.navigator.onLine;
+		},
+		//带遮罩的提示框
+		maskDialog: function(obj) { 
+			var str = '<div class="maskDialog">' + 
+							'<div class="mask"></div>' + 
+							'<div class="dialog">' + 
+								'<div class="dialog-body">' + 
+									'<h3>' + obj.title + '</h3>' + 
+									'<p>' + obj.content + '</p>' + 
+								'</div>' + 
+								'<div class="dialog-footer">' + 
+									'<button id="' + obj.footerLeftId + '">' + obj.footerLeftTxt + '</button>' + 
+									'<button id="' + obj.footerLeftId + '">' + obj.footerRightTxt + '</button>' + 
+								'</div>' + 
+							'</div>' + 
+						'</div>';
+			$body.append(str);
+		},
 		//异步加载文件
 		loadFile: function(href) { 
 			return $.ajax({ 
@@ -128,29 +149,38 @@
 			});
 		},
 		//网络连接失败提示
-		noNetTip: function(targetEle) { 
+		weakNetTip: function(targetEle) { 
 			var html = '<div class="noNet zIndex-3">' +
 							'<img id="refresh" src="img/error.png" alt="" />' +
-							'<p>网络连接失败，点击刷新</p>' +
+							'<h3>网络不给力啊</h3>' +
+							'<p>亲，请检查一下网络后再试试吧</p>' +
+							'<p>点击图片重新加载</p>' +
 						'</div>';
 			var $targetEle = $(targetEle);
 			if ($targetEle.children('.noNet').length === 0) { 
 				$(html).appendTo($targetEle);
 			}
 		},
-
 		//缓存模版页面
 		templateCache: function(arr) { 
 			if ($.isArray(arr)) { 
 				for (var i = 0, len = arr.length; i < len; i++) { 
 					var path = arr[i];
-					ma.loadFile(path)
-						.done(function(data, textStatus, jqXHR) { 
+					$.ajax({ 
+						url: baseUrl + path,
+						beforeSend: function() { 
+							
+						},
+						success: function(data, textStatus, jqXHR) { 
 							$body.data(path, data);
-						})
-						.fail(function(XMLHttpRequest, textStatus, errorThrown) { 
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) { 
 							$.error(errorThrown + '. 请检查' + path + '的路径是否正确');
-						});
+						},
+						complete: function(XMLHttpRequest, textStatus) { 
+							
+						}
+					});
 				}
 			} else { 
 				$.error('你需要传入一个带文件路径的数组');
